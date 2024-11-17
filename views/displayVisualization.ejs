@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Custom Visualization for <%= stockData.symbol %></title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Custom Visualization for <%= stockData.symbol %></h1>
+  <canvas id="customChart" width="600" height="400"></canvas>
+  <script>
+    const ctx = document.getElementById('customChart').getContext('2d');
+    const customChart = new Chart(ctx, {
+      type: '<%= stockData.chartType %>',
+      data: {
+        labels: <%- JSON.stringify(stockData.dates) %>,
+        datasets: [{
+          label: '<%= stockData.symbol %> Closing Prices',
+          data: <%- JSON.stringify(stockData.prices) %>,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          fill: '<%= stockData.chartType === "line" ? false : true %>',
+        }],
+      },
+      options: {
+        scales: {
+          x: {
+            display: <%= stockData.chartType !== "pie" && stockData.chartType !== "doughnut" %>,
+            title: {
+              display: true,
+              text: 'Date',
+            },
+          },
+          y: {
+            display: <%= stockData.chartType !== "pie" && stockData.chartType !== "doughnut" %>,
+            title: {
+              display: true,
+              text: 'Price (USD)',
+            },
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  </script>
+  <a href="/visualization/create">Create Another Visualization</a><br />
+  <a href="/dashboard">Back to Dashboard</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

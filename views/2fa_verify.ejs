@@ -1,0 +1,21 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Two-Factor Authentication Verification</title>
+</head>
+<body>
+  <h1>Verify Two-Factor Authentication</h1>
+  <% if (message) { %>
+    <p style="color: red;"><%= message %></p>
+  <% } %>
+  <form action="/2fa/verify" method="POST">
+    <label>Enter the 6-digit code from your authenticator app:</label>
+    <input type="text" name="token" required /><br />
+    <button type="submit">Verify</button>
+  </form>
+  <%- include('partials/footer'); %>
+</body>
+</html>

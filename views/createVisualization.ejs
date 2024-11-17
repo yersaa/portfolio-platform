@@ -1,0 +1,31 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Create Custom Visualization</title>
+</head>
+<body>
+  <h1>Create Custom Visualization</h1>
+  <% if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
+  <form action="/visualization/create" method="POST">
+    <label>Enter Stock Symbol:</label>
+    <input type="text" name="symbol" required /><br />
+
+    <label>Select Chart Type:</label>
+    <select name="chartType" required>
+      <option value="line">Line</option>
+      <option value="bar">Bar</option>
+      <option value="pie">Pie</option>
+      <option value="doughnut">Doughnut</option>
+    </select><br />
+
+    <button type="submit">Create Visualization</button>
+  </form>
+  <a href="/dashboard">Back to Dashboard</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

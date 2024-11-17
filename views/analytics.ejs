@@ -1,0 +1,49 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Portfolio Items by User</h1>
+  <canvas id="analyticsChart" width="600" height="400"></canvas>
+  <script>
+    const ctx = document.getElementById('analyticsChart').getContext('2d');
+    const analyticsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: <%- JSON.stringify(labels) %>,
+        datasets: [{
+          label: 'Number of Portfolio Items',
+          data: <%- JSON.stringify(data) %>,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        }],
+      },
+      options: {
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'User',
+            },
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Number of Items',
+            },
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  </script>
+  <a href="/dashboard">Back to Dashboard</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

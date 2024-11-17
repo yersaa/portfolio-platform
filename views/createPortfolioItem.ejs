@@ -1,0 +1,26 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Create Portfolio Item</title>
+</head>
+<body>
+  <h1>Create New Portfolio Item</h1>
+  <form action="/portfolio/create" method="POST" enctype="multipart/form-data">
+    <label>Title:</label>
+    <input type="text" name="title" required /><br />
+
+    <label>Description:</label>
+    <textarea name="description"></textarea><br />
+
+    <label>Images (up to 3):</label>
+    <input type="file" name="images" multiple accept="image/*" required /><br />
+
+    <button type="submit">Create</button>
+  </form>
+  <a href="/portfolio">Back to Portfolio</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

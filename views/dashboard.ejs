@@ -1,0 +1,36 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <p>Welcome, <%= user.username %>!</p>
+
+  <% if (user.role === 'admin') { %>
+    <p><a href="/admin">Admin Dashboard</a></p>
+  <% } %>
+
+  <% if (user.role === 'editor' || user.role === 'admin') { %>
+    <p><a href="/portfolio/create">Create Portfolio Item</a></p>
+    <p><a href="/visualization/create">Create Custom Visualization</a></p> <!-- New Link -->
+  <% } %>
+
+  <p><a href="/portfolio">View Portfolio</a></p>
+  <p><a href="/news">Latest News</a></p>
+  <p><a href="/stocks">Stock Market Information</a></p>
+  <p><a href="/market-trends">Stock Market Trends</a></p> <!-- New Link -->
+
+  <p>
+    <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+      Logout
+    </a>
+  </p>
+  <form id="logout-form" action="/logout?_method=DELETE" method="POST" style="display: none;"></form>
+
+  <%- include('partials/footer'); %>
+</body>
+</html>

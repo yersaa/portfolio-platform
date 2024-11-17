@@ -1,0 +1,30 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Edit Portfolio Item</title>
+</head>
+<body>
+  <h1>Edit Portfolio Item</h1>
+  <form action="/portfolio/<%= item._id %>/edit" method="POST" enctype="multipart/form-data">
+    <label>Title:</label>
+    <input type="text" name="title" value="<%= item.title %>" required /><br />
+
+    <label>Description:</label>
+    <textarea name="description"><%= item.description %></textarea><br />
+
+    <label>Images (up to 3):</label>
+    <input type="file" name="images" multiple accept="image/*" /><br />
+    <p>Current Images:</p>
+    <% item.images.forEach(function(image) { %>
+      <img src="<%= image %>" alt="Image" width="100" /><br />
+    <% }); %>
+
+    <button type="submit">Update</button>
+  </form>
+  <a href="/portfolio">Back to Portfolio</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

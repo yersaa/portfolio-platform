@@ -1,0 +1,60 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Stock Market Information</title>
+  <script src="/js/chart.js"></script>
+</head>
+<body>
+  <h1>Stock Market Information</h1>
+  <form action="/stocks" method="POST">
+    <label>Enter Stock Symbol:</label>
+    <input type="text" name="symbol" required />
+    <button type="submit">Get Stock Data</button>
+  </form>
+
+  <% if (stockData) { %>
+    <h2>Stock Data for <%= stockData.symbol %></h2>
+    <canvas id="stockChart" width="600" height="400"></canvas>
+    <script>
+      const ctx = document.getElementById('stockChart').getContext('2d');
+      const stockChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: <%- JSON.stringify(stockData.dates) %>,
+          datasets: [{
+            label: 'Closing Price',
+            data: <%- JSON.stringify(stockData.prices) %>,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: false,
+          }],
+        },
+        options: {
+          scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Date',
+              },
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Price (USD)',
+              },
+            },
+          },
+        },
+      });
+    </script>
+  <% } else if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
+  <a href="/dashboard">Back to Dashboard</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>

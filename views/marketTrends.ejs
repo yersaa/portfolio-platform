@@ -1,0 +1,52 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/header'); %>
+  <title>Stock Market Trends</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Stock Market Trends</h1>
+  <% stockData.forEach(function(stock) { %>
+    <h2><%= stock.symbol %></h2>
+    <canvas id="chart-<%= stock.symbol %>" width="600" height="400"></canvas>
+    <script>
+      const ctx<%= stock.symbol %> = document.getElementById('chart-<%= stock.symbol %>').getContext('2d');
+      const chart<%= stock.symbol %> = new Chart(ctx<%= stock.symbol %>, {
+        type: 'line',
+        data: {
+          labels: <%- JSON.stringify(stock.dates) %>,
+          datasets: [{
+            label: '<%= stock.symbol %> Closing Prices',
+            data: <%- JSON.stringify(stock.prices) %>,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: false,
+          }],
+        },
+        options: {
+          scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Date',
+              },
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Price (USD)',
+              },
+            },
+          },
+        },
+      });
+    </script>
+  <% }); %>
+  <a href="/dashboard">Back to Dashboard</a>
+  <%- include('partials/footer'); %>
+</body>
+</html>
