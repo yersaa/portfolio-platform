@@ -324,25 +324,19 @@ Click the Fork button at the top-right corner of this page.
 
 Clone Your Fork:
 
-bash
-Копировать код
 git clone https://github.com/yourusername/portfolio-platform.git
 cd portfolio-platform
 Create a New Branch:
 
-bash
-Копировать код
 git checkout -b feature/YourFeatureName
 Make Changes and Commit:
 
-bash
-Копировать код
 git add .
 git commit -m "Add Your Feature"
 Push to Your Fork:
 
 bash
-Копировать код
+
 git push origin feature/YourFeatureName
 Create a Pull Request:
 
