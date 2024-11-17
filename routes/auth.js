@@ -1,5 +1,3 @@
-// routes/auth.js
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -7,17 +5,31 @@ const passport = require('passport');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const User = require('../models/User');
-const { checkAuthenticated, checkNotAuthenticated, checkTwoFactorAuthenticated } = require('../middlewares/authorization');
+const transporter = require('../config/nodemailer'); // Import Nodemailer transporter
+const {
+  checkAuthenticated,
+  checkNotAuthenticated,
+  checkTwoFactorAuthenticated,
+} = require('../middlewares/authorization');
 
-// Register Route
+// Register Route - GET
 router.get('/register', checkNotAuthenticated, (req, res) => {
   res.render('register');
 });
 
+// Register Route - POST
 router.post('/register', checkNotAuthenticated, async (req, res) => {
   const { username, email, password, firstName, lastName, age, gender } = req.body;
 
   try {
+    // Check if the username or email already exists
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      // You can add flash messages to inform the user
+      req.flash('error', 'Username or email already exists');
+      return res.redirect('/register');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -32,6 +44,29 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
     });
 
     await newUser.save();
+
+    // Send Welcome Email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Welcome to the Portfolio Platform',
+      text: `Hello ${firstName || username},
+
+Thank you for registering at our Portfolio Platform. We're excited to have you on board!
+
+Best regards,
+The Portfolio Platform Team`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending welcome email:', error);
+        // You might want to handle the error, e.g., log it or notify admins
+      } else {
+        console.log('Welcome email sent:', info.response);
+      }
+    });
+
     res.redirect('/login');
   } catch (err) {
     console.error(err);
@@ -39,11 +74,12 @@ router.post('/register', checkNotAuthenticated, async (req, res) => {
   }
 });
 
-// Login Route
+// Login Route - GET
 router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login', { messages: req.flash('error') });
 });
 
+// Login Route - POST
 router.post(
   '/login',
   checkNotAuthenticated,
@@ -66,7 +102,7 @@ router.delete('/logout', (req, res) => {
   });
 });
 
-// 2FA Setup Route
+// 2FA Setup Route - GET
 router.get('/2fa/setup', checkAuthenticated, (req, res) => {
   const secret = speakeasy.generateSecret({ length: 20 });
 
@@ -88,6 +124,7 @@ router.get('/2fa/setup', checkAuthenticated, (req, res) => {
   });
 });
 
+// 2FA Setup Route - POST
 router.post('/2fa/setup', checkAuthenticated, (req, res) => {
   const { token } = req.body;
   const tempSecret = req.session.tempSecret;
@@ -125,7 +162,7 @@ router.post('/2fa/setup', checkAuthenticated, (req, res) => {
   }
 });
 
-// 2FA Verification Route
+// 2FA Verification Route - GET
 router.get('/2fa/verify', checkAuthenticated, (req, res) => {
   // If 2FA is not set up, redirect to setup
   if (!req.user.twoFactorSecret) {
@@ -134,6 +171,7 @@ router.get('/2fa/verify', checkAuthenticated, (req, res) => {
   res.render('2fa_verify', { message: null });
 });
 
+// 2FA Verification Route - POST
 router.post('/2fa/verify', checkAuthenticated, (req, res) => {
   const { token } = req.body;
 
