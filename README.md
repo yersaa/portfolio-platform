@@ -91,8 +91,7 @@ Create a `.env` file in the root directory of the project. Open this file in you
 
 PORT=3000 MONGODB_URI=mongodb://localhost:27017/portfolio-platform SESSION_SECRET=your_session_secret JWT_SECRET=your_jwt_secret
 
-markdown
-Копировать код
+
 
 
 - **PORT**: The port number the server will listen on (default is `3000`).
